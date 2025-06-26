@@ -1,0 +1,62 @@
+:root {
+    --deg:0deg;
+}
+* {
+    font-family: 'Ubuntu Mono', monospace;
+}
+@keyframes rotatingShadow {
+    0% {
+        --deg:0deg;
+    }
+    20% {
+        --deg:72deg;
+    }
+    40% {
+        --deg:144deg;
+    }
+    60% {
+        --deg:216deg;
+    }
+    80% {
+        --deg:288deg;
+    }
+    100% {
+        --deg:360deg;
+    }
+}
+.login-page {
+    width:100%; height:100%;
+    margin:0px; padding:0px;
+    background-color:rgb(63, 62, 62);
+}
+.form-style {
+    display:flex; position:relative;
+    width:var(--width); height:var(--height);
+    left:calc(50% - var(--width) / 2); top:calc(50% - var(--height) / 2);
+    margin:0px; padding:0px;
+    flex-direction:var(--direction);
+    border:none; border-radius:10px;
+    /*background-image:linear-gradient(45deg, rgb(41, 121, 212), skyblue);*/
+    background-color:rgb(87, 83, 83);
+}
+.form-style::after {
+    position:absolute;
+    width:100%; height:100%;
+    content:"";
+    z-index:-1;
+    background-image:linear-gradient(var(--deg), red, rgb(176, 44, 233), blue);
+    animation:rotatingShadow 15s linear 0s infinite normal forwards running;
+    filter:blur(10px);
+}
+.item1 {
+    height:var(--item1-height); width:var(--item1-width);
+    padding:10%; margin:0px;
+    display:flex; flex-direction:column;
+    background-color:transparent;
+}
+.item2 {
+    display:block;
+    width:var(--item2-width); height:var(--item2-height);
+    padding:0px; margin:0px;
+    background-color:transparent;
+}
