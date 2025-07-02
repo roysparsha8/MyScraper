@@ -16,7 +16,7 @@ export const TextInput = ({fname, width, height, top, left}) => {
     var inputId = fname + "Id";
     return (
         <div className="text-input-group" style={getCSSVarObject(height, width, top, left)}>
-            <input name={fname} id={inputId} type="text" placeholder=" "/>
+            <input name={fname} id={inputId} type="text" placeholder=" " required={true}/>
             <label htmlFor={inputId}>{fname[0].toUpperCase() + fname.slice(1).toLowerCase()}</label>
         </div>
     );
@@ -31,7 +31,7 @@ export const Password = ({fname, width, height, top, left}) => {
     };
     return (
         <div className="password-input-group" style={getCSSVarObject(height, width, top, left)}>
-            <input name={fname} id={inputId} type={type} placeholder=" " />
+            <input name={fname} id={inputId} type={type} placeholder=" " required={true}/>
             <label htmlFor={inputId}>{fname[0].toUpperCase() + fname.slice(1).toLowerCase()}</label>
             <button onClick={handleType}><Eye opened={type === "password"} aspectRatio={1} /></button>
         </div>
@@ -69,7 +69,7 @@ export const FileInput = ({fname, width, height, top, left, children}) => {
         <div className="drag-drop-click-file" onDragOver={handleDragOver} onDrop={handleDrop} onClick={handleClick} style={getCSSVarObject(height, width, top, left)}>
             <p>{children}</p>
             <img src={file ? URL.createObjectURL(file) : null} alt="none" style={file ? {display:"block",width:"100%",height:"100%"} : {display:"none"}} />
-            <input name={fname} type="file" style={{display:"none"}} />
+            <input name={fname} type="file" style={{display:"none"}} required={true}/>
         </div>
     );
 };
