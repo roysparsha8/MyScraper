@@ -9,10 +9,10 @@ async function init() {
         });
         console.log("Database connection created successfully");
         const schema = new mdb.Schema({
-            name: String,
-            email: String,
-            password: String,
-            fileInput: String
+            Name: String,
+            Email: String,
+            Password: String,
+            FileInput: String
         });
         User = mdb.models["User"] || mdb.model("User", schema);
     }
@@ -65,3 +65,4 @@ async function term() {
         console.log("Error while terminating MONGODB connection ", err);
     }
 }
+module.exports = {init, insert, getUsers, term};

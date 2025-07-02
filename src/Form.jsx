@@ -1,11 +1,13 @@
 import "./Form.css";
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { TextInput, Password, FileInput} from './FormInputs';
+import { TextInput, Password, Submit, FileInput } from './FormInputs';
+import { useNavigate } from "react-router-dom";
 
-export const Form = ({isImage, width, height}) => {
+const Form = ({isImage, width, height}) => {
     const [sep, setSep] = useState(50);
     const [landscape, setLandscape] = useState(true);
     const ref1 = useRef(null), ref2 = useRef(null), ref3 = useRef(null), ref4 = useRef(null);
+    const navigate = useNavigate();
     var styleObj = {
         "--width":`${width}%`, "--height":`${height}%`,
         "--item1-width":`${landscape ? (isImage ? sep : 100) : 100}%`, "--item1-height":`${landscape ? 100 : (isImage ? sep : 100)}%`,
@@ -53,7 +55,6 @@ export const Form = ({isImage, width, height}) => {
         e.preventDefault();
         const userData = new FormData(ref2.current);
         var obj = Object.fromEntries(userData.entries());
-        obj.type = isImage ? "register" : "login";
         if(isImage) {
             var fileInput = document.querySelector("input[name=\"fileInput\"]").files[0];
             try {
@@ -73,9 +74,14 @@ export const Form = ({isImage, width, height}) => {
             if(!res.ok)
                 throw Error("Network error occured");
             const data = await res.json();
-            if(data.token === "invalid")
+            if(data.err == 2)
                 throw Error("Error in processing form response to json web token");
-            document.cookie = `token=${data.token}; path=/`;
+            else if(data.err == 1) {
+                window.alert("Get registered first"); // Registration page cannot send error = 1 and login page can
+                navigate("/register");
+            }
+            else
+                document.cookie = `scraptoken=${data.token}; path=/`;
         }
         catch(err) {
             console.log(err);
@@ -95,28 +101,27 @@ export const Form = ({isImage, width, height}) => {
         resizer.observe(ref2.current);
         if(isImage) 
             window.addEventListener("mousedown", handleMouseDown);
-        ref1.current.addEventListener("submit", handleSubmit);
         return () => {
             resizer.disconnect();
             if(isImage)
                 window.removeEventListener("mousedown", handleMouseDown);
-            ref1.current.removeEventListener("submit", handleSubmit);
         }
     }, []);
     return (
-        <form className="form-style" ref={ref2} style={styleObj}>
+        <form className="form-style" ref={ref2} style={styleObj} onSubmit={handleSubmit}>
             <div ref={ref4} style={{display:"none",position:"absolute",width:landscape?"1px":"100%",height:landscape?"100%":"1px",backgroundColor:"gray",zIndex:999,pointerEvents:"none"}}></div>
             <div className="item1" ref={ref3}>
-                <TextInput fname="name" width={80} height={8} top="auto" left="auto" />
-                <TextInput fname="email" width={80} height={8} top="auto" left="auto" />
-                <Password fname="password" width={80} height={8} top="auto" left="auto" />
+                <TextInput fname="Name" width={80} height={8} top="auto" left="auto" />
+                <TextInput fname="Email" width={80} height={8} top="auto" left="auto" />
+                <Password fname="Password" width={80} height={8} top="auto" left="auto" />
                 <Submit ref={ref1} width={80} height={8} top="auto" left="auto"> Submit </Submit>
             </div>
             { isImage ? (
                 <div className="item2">
-                    <FileInput fname="fileInput" width={100} height={100} top="auto" left="auto">Drag and drop file here or Click to browse</FileInput>
+                    <FileInput fname="FileInput" width={100} height={100} top="auto" left="auto">Drag and drop file here or Click to browse</FileInput>
                 </div>
             ) : null}
         </form>
     );
 };
+export default Form;
