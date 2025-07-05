@@ -1,6 +1,19 @@
 :root {
     --custom-font-family:'Ubuntu Mono', monospace;
 }
+@media (max-width: 600px) {
+    :root {
+        --font-size:clamp(0.875rem, 2vw, 1rem);
+    }
+}
+@media (min-width: 600px) {
+    :root {
+        --font-size:clamp(1rem, 2vw, 1.5rem);
+    }
+}
+* {
+    box-sizing:border-box;
+}
 body {
     width:100vw;
     height:100vh;

@@ -5,7 +5,7 @@ export const Eye = ({ opened, aspectRatio }) => {
             <ellipse cx={x / 2} cy={y / 2} rx={x / 2} ry={y / 4} stroke="none" fill="white" />
             <circle cx={x / 2} cy={y / 2} r={y / 4} stroke="none" fill="gray" />
             <circle cx={x / 2} cy={y / 2} r={y / 8} stroke="none" fill="black" />
-            { !opened ? <line x1="0" y1={y} x2={x} y2="0" stroke="green" strokeWidth="1" /> : null }
+            { !opened ? <line x1="0" y1={y} x2={x} y2="0" stroke="green" strokeWidth="3" /> : null }
         </svg>
     );
 };

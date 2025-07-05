@@ -6,9 +6,9 @@ import Loader from "./Loader"
 import { Navigate } from "react-router-dom";
 
 const ProtectRoute = () => {
-    const [content, setContent] = useState(<Loader/>);
+    const [content, setContent] = useState(<Loader count={20}/>);
     function parseToken(cookie) {
-        fieldValPairs = cookie.split("; ");
+        var fieldValPairs = cookie.split("; ");
         var token = "";
         for(const fieldVal of fieldValPairs) {
             if(fieldVal.startsWith("scraptoken")) {
@@ -38,8 +38,9 @@ const App = () => {
             <Routes>
                 <Route path="/login" element={<Auth type="login"/>}/>
                 <Route path="/register" element={<Auth type="register"/>}/>
-                <Route path="/" element={<ProtectRoute />} />
+                <Route path="/" element={<ProtectRoute/>} />
             </Routes>
         </BrowserRouter>
     );
 };
+export default App;
