@@ -1,5 +1,6 @@
-var express = require("express"), fs = require("fs"), jwt = require("jsonwebtoken"), db = require("./MongoDBHandlers");
+var express = require("express"), fs = require("fs"), jwt = require("jsonwebtoken"), db = require("./MongoDBHandlers"), path = require("path");
 var server = express();
+server.use(express.static(path.join(__dirname, "..", "dist")));
 server.use(express.json());
 var key = fs.readFileSync("./privateKey.txt", "utf-8");
 server.post("/submit", async (req, res) => {
@@ -66,7 +67,8 @@ server.get("/authenticate", (req, res) => {
         }
     });
 });
-server.listen(3000, () => console.log("Server listening or port 3000"));
+server.get("*", (req, res) => res.sendFile(path.join(__dirname, "..", "dist", "index.html")));
+server.listen(3000, () => console.log("Server listening or http://localhost:3000/"));
 
 
 

@@ -8,13 +8,15 @@ const Form = ({isImage, width, height}) => {
     const [landscape, setLandscape] = useState(true);
     const ref1 = useRef(null), ref2 = useRef(null), ref3 = useRef(null), ref4 = useRef(null);
     const navigate = useNavigate();
+    var deg = 0; let frameId;
     var styleObj = {
         "--width":`${width}%`, "--height":`${height}%`,
         "--item1-width":`${landscape ? (isImage ? sep : 100) : 100}%`, "--item1-height":`${landscape ? 100 : (isImage ? sep : 100)}%`,
         "--item2-width":`${landscape ? 100 - (isImage ? sep : 100) : 100}%`, "--item2-height":`${landscape ? 100 : 100 - (isImage ? sep : 100)}%`,
-        "--direction":`${landscape ? "row" : "column-reverse"}`
+        "--direction":`${landscape ? "row" : "column-reverse"}`,
     };
     function handleMouseMove(e) {
+        e.preventDefault();
         var rect = ref2.current.getBoundingClientRect();
         Object.assign(ref4.current.style, {
             display:"block",
@@ -23,6 +25,7 @@ const Form = ({isImage, width, height}) => {
         });
     }
     function handleMouseDown(e) {
+        e.preventDefault();
         if(e.button === 0) {
             var rect = ref3.current.getBoundingClientRect();
             var x = e.clientX - rect.left, y = e.clientY - rect.top;
@@ -37,6 +40,7 @@ const Form = ({isImage, width, height}) => {
         }
     }
     function handleMouseUp(e) {
+        e.preventDefault();
         var rect = ref2.current.getBoundingClientRect();
         Object.assign(ref4.current.style, {display:"none"});
         window.removeEventListener("mouseup", handleMouseUp);
@@ -80,8 +84,10 @@ const Form = ({isImage, width, height}) => {
                 window.alert("Get registered first"); // Registration page cannot send error = 1 and login page can
                 navigate("/register");
             }
-            else
+            else {
                 document.cookie = `scraptoken=${data.token}; path=/`;
+                navigate("/");
+            }
         }
         catch(err) {
             console.log(err);
@@ -93,7 +99,13 @@ const Form = ({isImage, width, height}) => {
             setLandscape(landscape => rect.width >= rect.height);
         }
     }, []);
+    function animate() {
+        ref2.current.style.setProperty("--deg", `${deg}deg`);
+        deg = (deg + 1) % 360;
+        frameId = window.requestAnimationFrame(animate);
+    }
     useEffect(() => {
+        frameId = window.requestAnimationFrame(animate);
         var resizer = new ResizeObserver(([entry]) => {
             const rect = entry.contentRect;
             setLandscape(landscape => rect.width >= rect.height);
@@ -102,6 +114,7 @@ const Form = ({isImage, width, height}) => {
         if(isImage) 
             window.addEventListener("mousedown", handleMouseDown);
         return () => {
+            window.cancelAnimationFrame(frameId);
             resizer.disconnect();
             if(isImage)
                 window.removeEventListener("mousedown", handleMouseDown);
@@ -111,14 +124,15 @@ const Form = ({isImage, width, height}) => {
         <form className="form-style" ref={ref2} style={styleObj} onSubmit={handleSubmit}>
             <div ref={ref4} style={{display:"none",position:"absolute",width:landscape?"1px":"100%",height:landscape?"100%":"1px",backgroundColor:"gray",zIndex:999,pointerEvents:"none"}}></div>
             <div className="item1" ref={ref3}>
-                <TextInput fname="Name" width={80} height={8} top="auto" left="auto" />
-                <TextInput fname="Email" width={80} height={8} top="auto" left="auto" />
-                <Password fname="Password" width={80} height={8} top="auto" left="auto" />
-                <Submit ref={ref1} width={80} height={8} top="auto" left="auto"> Submit </Submit>
+                <div className="item1-sub1"><TextInput fname="Name"/></div>
+                <div className="item1-sub2"><TextInput fname="Email"/></div>
+                <div className="item1-sub3"><Password fname="Password"/></div>
+                <div className="item1-sub4"><Submit ref={ref1}> Submit </Submit></div>
+                <button className="page-change" onClick={e => navigate(isImage ? "/login" : "/register")}>{isImage ? "Login" : "Register"}</button>
             </div>
             { isImage ? (
                 <div className="item2">
-                    <FileInput fname="FileInput" width={100} height={100} top="auto" left="auto">Drag and drop file here or Click to browse</FileInput>
+                    <FileInput fname="FileInput">Drag and drop file here or Click to browse</FileInput>
                 </div>
             ) : null}
         </form>

@@ -1,5 +1,5 @@
 import {useRef, useEffect} from "react";
-const Loader = () => {
+const Loader = ({count}) => {
     const styleObj = {
         display:"block",
         border:"none",
@@ -16,24 +16,34 @@ const Loader = () => {
         ctx.fillStyle = "black"; ctx.fillRect(0, 0, width, height);
         ctx.scale(dpr, dpr);
         ctx.translate(width / 2, height / 2);
-        var rphase = [0, Math.floor(Math.random() * Math.PI * 2), Math.floor(Math.random() * Math.PI * 2), Math.floor(Math.random() * Math.PI * 2)];
-        var t = 0, color = ["rgb(64, 135, 241)", "rgb(81, 241, 75)", "rgb(226, 105, 241)", "rgb(241, 221, 105)"], rotation = [0, Math.PI / 4, Math.PI / 2, 3 * Math.PI / 4];
+        var rphase = [], rotation = [], color = [];
+        for(let i = 0; i < count; i++) {
+            var r = Math.random();
+            rphase.push(Math.floor(r * 2 * Math.PI));
+            rotation.push(i * Math.PI / count);
+            color.push(`hsl(${Math.floor(r * 360)}, 90%, 50%)`);
+        }
+        var t = 0;
         let frameId;
         const fillCircle = (x, y, c) => {
             ctx.beginPath();
-            ctx.arc(x, y, 5, 0, 2 * Math.PI);
+            ctx.shadowColor = c, ctx.shadowBlur = 8; 
+            ctx.arc(x, y, 12, 0, 2 * Math.PI);
             ctx.fillStyle = c;
             ctx.fill();
+            ctx.shadowColor = "transparent", ctx.shadowBlur = 0;
         };
         const animate = () => {
-            for(let i = 0; i < 4; i++) {
-                var x = 5 * Math.cos(t + rphase[i]) * Math.cos(rotation[i]) - 4 * Math.sin(t + rphase[i]) * Math.sin(rotation[i]);
-                var y = 5 * Math.cos(t + rphase[i]) * Math.sin(rotation[i]) + 4 * Math.sin(t + rphase[i]) * Math.cos(rotation[i]);
-                fillCircle(x, y, color[i]);
+            for(let i = 0; i < count; i++) {
+                var x = 200 * Math.cos(t + rphase[i]) * Math.cos(rotation[i]) - 100 * Math.sin(t + rphase[i]) * Math.sin(rotation[i]);
+                var y = 200 * Math.cos(t + rphase[i]) * Math.sin(rotation[i]) + 100 * Math.sin(t + rphase[i]) * Math.cos(rotation[i]);
+                fillCircle(x, y, color[i % color.length]);
             }
-            ctx.fillStyle = "rgba(0,0,0,0.5)";
+            
+            ctx.fillStyle = "rgba(0,0,0,0.08)";
             ctx.fillRect(-width / 2, -height / 2, width, height);
             frameId = window.requestAnimationFrame(animate);
+            t += 0.05;
         };
         animate();
         return () => {

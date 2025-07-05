@@ -2,77 +2,84 @@
     font-family: 'Ubuntu Mono', monospace;
 }
 .text-input-group {
-    display:block; position:relative;
-    width:var(--width); height:var(--height);
-    top:var(--top); left:var(--left);
+    display:block;
+    position:relative;
+    width:100%; height:100%;
     margin:0px; padding:0px;
-    border:none;
+    border:1px solid white;
+    border-radius:6px;
 }
 .text-input-group:hover {
     border:1px solid rgb(23, 125, 241);
 }
 .text-input-group > input {
-    outline:none;
-    display:block; position:relative;
+    all:unset;
+    display:block;
     width:100%; height:100%;
     font-size:var(--font-size);
-    background-color:white;
+    background-color:transparent;
     color:rgb(122, 247, 64);
     text-align:center;
     margin:0px; padding:0px;
 }
 .text-input-group > label {
     position:absolute;
-    width:100%;
-    top:calc(50% - var(--font-size));
+    display:flex;
+    align-items:center; justify-content:center;
+    width:100%; height:100%;
+    top:0px;
     background-color:transparent;
-    text-align:center; color:navy;
+    color:white;
     font-size:var(--font-size);
     transition:top 500ms ease 0ms, font-size 500ms ease 0ms;
 }
 .text-input-group > input:focus + label, .text-input-group > input:not(:placeholder-shown) + label {
-    top:calc(0% - var(--font-size));
-    font-size:calc(var(--font-size) - 2px);
+    top:-50%;
+    font-size:calc(var(--font-size) - 0.5rem);
 }
 .password-input-group {
-    display:flex; position:relative;
-    width:calc(var(--width) + var(--height)); height:var(--height);
-    top:var(--top); left:var(--left);
+    display:flex;
+    position:relative;
+    width:100%; height:100%;
     margin:0px; padding:0px;
-    border:none;
+    border:1px solid white;
+    border-radius:6px;
 }
 .password-input-group > input {
-    outline:none;
-    display:block;
-    width:var(--width); height:100%;
+    all:unset; display:block;
+    height:100%; width:100%;
+    flex-grow:1; flex-shrink:1; /*Input elements does not automatically grows or shrinks after using flex:1 so 
+    flex-grow and flex-shrink is always required*/
+    flex-basis:1; /*This is used to set initial width or height when flex-direction is row or column respectively
+    in terms of em, px etc after which flex-grow and flex-shrink comes to play*/
     font-size:var(--font-size);
-    background-color:white;
+    background-color:transparent;
     text-align:center;
     margin:0px; padding:0px;
     color:rgb(122, 247, 64);
 }
 .password-input-group > label {
     position:absolute;
-    width:var(--width);
-    top:calc(50% - var(--font-size));
+    display:flex; align-items:center; justify-content:center;
+    width:100%; height:100%;
+    top:0px;
     background-color:transparent;
-    text-align:center; color:navy;
-    font-size:fit-content;  /*var(--font-size);*/
+    color:white;
+    font-size:var(--font-size);
     transition:top 500ms ease 0ms, font-size 500ms ease 0ms;
 }
 .password-input-group > input:focus + label, .password-input-group > input:not(:placeholder-shown) + label {
-    top:calc(0% - var(--font-size));
-    font-size:calc(var(--font-size) - 2px);
+    top:-50%;
+    font-size:calc(var(--font-size) - 0.2rem);
 }
 .password-input-group > button {
     all:unset;
-    height:var(--height);
+    height:100%;
     aspect-ratio:1;
     background-color:transparent;
 }
 .submit-button {
-    top:var(--top); left:var(--left);
-    width:var(--width); height:var(--height);
+    width:100%; height:100%;
     display:block;
     border:none; outline:none;
     border-radius:9999px;
@@ -83,25 +90,21 @@
 .submit-button:hover {
     background-color:rgb(212, 209, 209);
 }
-.sumbit-button:active {
+.submit-button:active {
     color:white;
     background-color:navy;
 }
 .drag-drop-click-file {
     display:flex;
     margin:0px; padding:0px;
-    width:var(--width); height:var(--height);
+    width:100%; height:100%;
     font-size:var(--font-size);
-    top:var(--top); left:var(--left);
     background-color:transparent;
     align-items:center; justify-content:center;
-}
-.drag-drop-click-file:hover {
-    border:1px solid white;
-}
+} /*Use justify-content:space-around or space-between or gap: 10px to add horizontal and vertical space between items*/
 .drag-drop-click-file > p {
     font-weight:bold;
     color:rgb(34, 245, 199);
     text-align:center;
-    line-height:50%;
+    line-height:normal;
 }
