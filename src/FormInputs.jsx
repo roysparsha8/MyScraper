@@ -1,7 +1,7 @@
 import "./FormInputs.css";
 import { Eye } from "./CustomSVGIcons";
 import { useState, useEffect, useRef } from 'react';
-
+/* Bug in FormInput component */
 export const TextInput = ({fname}) => {
     var inputId = fname + "Id";
     return (
@@ -36,6 +36,7 @@ export const Submit = ({ref, children}) => {
 
 export const FileInput = ({fname, children}) => {
     const [file, setFile] = useState(null);
+    const ref = useRef();
     const handleDrop = (e) => {
         e.preventDefault();
         const droppedFiles = e.dataTransfer.files; // Files passed through drop event is transferred through dataTransfer object
@@ -46,20 +47,20 @@ export const FileInput = ({fname, children}) => {
     // behavior of dragover event.
     const handleClick = (e) => {
         e.preventDefault();
-        document.querySelector(`input[name="${fname}"]`).click();
+        ref.current.click();
     }
     useEffect(() => {
         if(file) {
             const dataTransfer = new DataTransfer();
             dataTransfer.items.add(file);
-            document.querySelector(`input[name="${fname}"]`).files = dataTransfer.files;
+            ref.current.files = dataTransfer.files;
         }
     }, [file, fname]);
     return (
         <div className="drag-drop-click-file" onDragOver={handleDragOver} onDrop={handleDrop} onClick={handleClick}>
             <p>{children}</p>
             <img src={file ? URL.createObjectURL(file) : null} alt="none" style={file ? {display:"block",width:"100%",height:"100%"} : {display:"none"}} />
-            <input name={fname} type="file" style={{display:"none"}} required={true}/>
+            <input name={fname} ref={ref} type="file" hidden={true}/>
         </div>
     );
 };

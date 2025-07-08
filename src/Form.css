@@ -1,3 +1,6 @@
+:root {
+    --form-background-color:rgb(73, 63, 63);
+}
 * {
     font-family: 'Ubuntu Mono', monospace;
 }
@@ -9,7 +12,7 @@
     flex-direction:var(--direction);
     border:none; border-radius:10px;
     transform-style:preserve-3d;
-    background-color:rgb(73, 63, 63);
+    background-color:var(--form-background-color);
 }
 .form-style::after {
     position:absolute;
@@ -59,7 +62,6 @@
     width:var(--item2-width); height:var(--item2-height);
     padding:0px; margin:0px;
     background-color:transparent;
-    border-radius:0px 10px 10px 0px;
 }
 .item2:hover {
     border:1px solid white;

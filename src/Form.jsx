@@ -60,9 +60,9 @@ const Form = ({isImage, width, height}) => {
         const userData = new FormData(ref2.current);
         var obj = Object.fromEntries(userData.entries());
         if(isImage) {
-            var fileInput = document.querySelector("input[name=\"fileInput\"]").files[0];
+            var fileInputElem = document.querySelector("input[name=\"FileInput\"]");
             try {
-                obj.fileInput = await fileToBase64Encode(fileInput);
+                obj.fileInput = fileInputElem.files.length > 0 ? await fileToBase64Encode(fileInputElem.files[0]) : null;
             }
             catch(err) {
                 console.log(err);
@@ -70,24 +70,29 @@ const Form = ({isImage, width, height}) => {
             }
         }
         try {
-            const res = await fetch("http://localhost:3000/submit", {
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body:JSON.stringify(obj)
-            });
-            if(!res.ok)
-                throw Error("Network error occured");
-            const data = await res.json();
-            if(data.err == 2)
-                throw Error("Error in processing form response to json web token");
-            else if(data.err == 1) {
-                window.alert("Get registered first"); // Registration page cannot send error = 1 and login page can
-                navigate("/register");
+            if(!isImage || obj.fileInput) {
+                const res = await fetch("http://localhost:3000/submit", {
+                    method:"POST",
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify(obj)
+                });
+                if(!res.ok)
+                    throw Error("Network error occured");
+                const data = await res.json();
+                if(data.err == 2)
+                    throw Error("Error in processing form response to json web token");
+                else if(data.err == 1) {
+                    window.alert("Get registered first"); // Registration page cannot send error = 1 and login page can
+                    navigate("/register");
+                }
+                else {
+                    document.cookie = `scraptoken=${data.token}; path=/`;
+                    navigate("/");
+                    console.log("Entry successfull");
+                }
             }
-            else {
-                document.cookie = `scraptoken=${data.token}; path=/`;
-                navigate("/");
-            }
+            else
+                window.alert("Please add your profile photo")
         }
         catch(err) {
             console.log(err);
@@ -131,8 +136,8 @@ const Form = ({isImage, width, height}) => {
                 <button className="page-change" onClick={e => navigate(isImage ? "/login" : "/register")}>{isImage ? "Login" : "Register"}</button>
             </div>
             { isImage ? (
-                <div className="item2">
-                    <FileInput fname="FileInput">Drag and drop file here or Click to browse</FileInput>
+                <div className="item2" style={{borderRadius: `${10 * +!landscape}px 10px ${10 * +landscape}px 0px`}}>
+                    <FileInput fname="FileInput">Drag and drop file here or Click to browse</FileInput> 
                 </div>
             ) : null}
         </form>
